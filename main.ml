@@ -1,5 +1,11 @@
+open Batteries
+
+let (>>=) = Option.bind
+
 let () =
-  Printf.printf "%s\n" @@
-    match Shell.readline "BODY" with
-      | None   -> "No input given."
-      | Some x -> x
+  let rec main () =
+    let cmd = Shell.readline "> " >>= Shell.tokenize in
+      match cmd with
+        | None     -> main ()
+        | Some cmd -> Shell.execute cmd ; main ()
+  in main ()
